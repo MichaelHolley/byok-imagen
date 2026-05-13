@@ -46,6 +46,7 @@
 	let size = $state(SIZES[0].id);
 	let prompt = $state('');
 	let imageUrl = $state<string | null>(null);
+	let generationCost = $state<number | null>(null);
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 
@@ -57,6 +58,7 @@
 		loading = true;
 		error = null;
 		imageUrl = null;
+		generationCost = null;
 
 		try {
 			const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -85,6 +87,7 @@
 			const images = data.choices?.[0]?.message?.images;
 			imageUrl = images?.[0]?.image_url?.url ?? null;
 			if (!imageUrl) error = 'No image returned';
+			generationCost = data.usage?.cost ?? null;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Network error';
 		} finally {
@@ -222,7 +225,14 @@
 		{#if imageUrl}
 			<div class="space-y-2">
 				<div class="flex items-center justify-between">
-					<Label class="font-mono text-xs">Output</Label>
+					<div class="flex items-center gap-2">
+						<Label class="font-mono text-xs">Output</Label>
+						{#if generationCost !== null}
+							<Badge variant="secondary" class="font-mono text-xs">
+								${generationCost.toFixed(4)}
+							</Badge>
+						{/if}
+					</div>
 					<Button variant="ghost" size="sm" onclick={download} class="h-7 gap-1 font-mono text-xs">
 						<DownloadIcon class="size-3" />
 						download
