@@ -3,16 +3,23 @@
 	import ApiKey from '$lib/components/ApiKey.svelte';
 	import ErrorDisplay from '$lib/components/ErrorDisplay.svelte';
 	import Header from '$lib/components/Header.svelte';
+	import HistoryGrid from '$lib/components/HistoryGrid.svelte';
 	import ImageOutput from '$lib/components/ImageOutput.svelte';
 	import LoadingSkeleton from '$lib/components/LoadingSkeleton.svelte';
 	import ModelSize from '$lib/components/ModelSize.svelte';
 	import Prompt from '$lib/components/Prompt.svelte';
+	import { history } from '$lib/history.svelte.js';
 	import LoaderIcon from '@lucide/svelte/icons/loader';
+
+	$effect(() => {
+		history.init();
+	});
 
 	const MODELS = [
 		{ id: 'google/gemini-3.1-flash-image-preview', name: 'Nano Banana 2', note: 'Google' },
 		{ id: 'google/gemini-3-pro-image-preview', name: 'Nano Banana Pro', note: 'Google' },
-		{ id: 'openai/gpt-5.4-image-2', name: 'GPT Image 2', note: 'OpenAI' }
+		{ id: 'openai/gpt-5.4-image-2', name: 'GPT Image 2', note: 'OpenAI' },
+		{ id: 'openai/gpt-5-image-mini', name: 'GPT Image Mini', note: 'OpenAI' }
 	];
 
 	const SIZES = [
@@ -66,8 +73,19 @@
 
 			const images = data.choices?.[0]?.message?.images;
 			imageUrl = images?.[0]?.image_url?.url ?? null;
-			if (!imageUrl) error = 'No image returned';
+			if (!imageUrl) {
+				error = 'No image returned';
+				return;
+			}
 			generationCost = data.usage?.cost ?? null;
+			history.add({
+				imageUrl,
+				prompt,
+				modelId: model,
+				modelName: selectedModel?.name ?? model,
+				size,
+				cost: generationCost
+			});
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Network error';
 		} finally {
@@ -118,5 +136,7 @@
 		{#if loading}
 			<LoadingSkeleton {size} modelName={selectedModel?.name ?? ''} />
 		{/if}
+
+		<HistoryGrid />
 	</main>
 </div>
