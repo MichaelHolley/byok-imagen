@@ -1,42 +1,23 @@
-# sv
+# BYOK Imagen
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Bring Your Own Key image generation. Paste an [OpenRouter](https://openrouter.ai) API key, pick a model and aspect ratio, generate images — all from the browser. No server, no data collection. History persists in localStorage.
 
-## Creating a project
+## Requirements
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [OpenRouter](https://openrouter.ai) API key with credits
 
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
+## Setup
 
 ```sh
-# recreate this project
-pnpm dlx sv@0.15.3 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:vercel" --install pnpm byok-imagen
+pnpm install
+pnpm dev
 ```
 
-## Developing
+Enter your OpenRouter API key in the UI on first load. The key is held in session memory only and never sent anywhere except directly to OpenRouter.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Stack
 
-```sh
-npm run dev
+- SvelteKit 2 + Svelte 5 (runes)
+- Tailwind CSS 4 + shadcn-svelte
+- Deployed on Vercel
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
