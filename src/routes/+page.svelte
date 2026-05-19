@@ -8,6 +8,7 @@
 	import LoadingSkeleton from '$lib/components/LoadingSkeleton.svelte';
 	import ModelSize from '$lib/components/ModelSize.svelte';
 	import Prompt from '$lib/components/Prompt.svelte';
+	import ReferenceImages from '$lib/components/ReferenceImages.svelte';
 	import { history } from '$lib/history.svelte.js';
 	import LoaderIcon from '@lucide/svelte/icons/loader';
 
@@ -33,6 +34,7 @@
 	let model = $state(MODELS[0].id);
 	let size = $state(SIZES[0].id);
 	let prompt = $state('');
+	let referenceImages = $state<string[]>([]);
 	let imageUrl = $state<string | null>(null);
 	let generationCost = $state<number | null>(null);
 	let loading = $state(false);
@@ -48,6 +50,17 @@
 		generationCost = null;
 
 		try {
+			const content =
+				referenceImages.length > 0
+					? [
+							{ type: 'text', text: prompt },
+							...referenceImages.map((url) => ({
+								type: 'image_url',
+								image_url: { url }
+							}))
+						]
+					: prompt;
+
 			const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
 				method: 'POST',
 				headers: {
@@ -58,7 +71,7 @@
 				},
 				body: JSON.stringify({
 					model,
-					messages: [{ role: 'user', content: prompt }],
+					messages: [{ role: 'user', content }],
 					modalities: ['image', 'text'],
 					image_config: { aspect_ratio: size }
 				})
@@ -109,6 +122,8 @@
 		<ApiKey bind:apiKey />
 
 		<ModelSize bind:model bind:size models={MODELS} sizes={SIZES} />
+
+		<ReferenceImages bind:images={referenceImages} />
 
 		<Prompt bind:prompt onGenerate={generate} />
 
