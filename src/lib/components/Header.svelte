@@ -7,7 +7,8 @@
 	<div class="mx-auto flex max-w-2xl items-center justify-between">
 		<div class="flex items-center gap-2">
 			<ImageIcon class="size-5 text-primary" />
-			<span class="font-mono text-sm font-semibold tracking-tight text-foreground">byok imagen</span>
+			<span class="font-mono text-sm font-semibold tracking-tight text-foreground">byok imagen</span
+			>
 		</div>
 		<div class="flex items-center gap-1.5">
 			<ShieldCheckIcon class="size-3.5 text-muted-foreground" />
