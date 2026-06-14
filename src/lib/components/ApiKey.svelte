@@ -2,6 +2,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
+	import { Switch } from '$lib/components/ui/switch/index.js';
 	import DatabaseIcon from '@lucide/svelte/icons/database';
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off';
 	import { onMount } from 'svelte';
@@ -60,24 +61,8 @@
 			{/if}
 		</p>
 		<div class="flex shrink-0 items-center gap-1.5">
-			<Label for="store-key" class="cursor-pointer font-mono text-xs text-muted-foreground"
-				>Remember</Label
-			>
-			<button
-				id="store-key"
-				role="switch"
-				aria-checked={storeKey}
-				onclick={() => (storeKey = !storeKey)}
-				class="focus-visible:ring-ring focus-visible:ring-offset-background relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 {storeKey
-					? 'bg-primary'
-					: 'bg-input'}"
-			>
-				<span
-					class="bg-background pointer-events-none block h-4 w-4 rounded-full shadow-lg ring-0 transition-transform {storeKey
-						? 'translate-x-4'
-						: 'translate-x-0'}"
-				></span>
-			</button>
+			<Label class="cursor-pointer font-mono text-xs text-muted-foreground">Remember</Label>
+			<Switch bind:checked={storeKey} />
 		</div>
 	</div>
 </div>
