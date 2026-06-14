@@ -2,10 +2,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 
-	let {
-		prompt = $bindable(),
-		onGenerate
-	}: { prompt: string; onGenerate: () => void } = $props();
+	let { prompt = $bindable(), onGenerate }: { prompt: string; onGenerate: () => void } = $props();
 
 	function handleKeydown(e: KeyboardEvent) {
 		if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') onGenerate();

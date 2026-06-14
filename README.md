@@ -20,4 +20,3 @@ Enter your OpenRouter API key in the UI on first load. The key is held in sessio
 - SvelteKit 2 + Svelte 5 (runes)
 - Tailwind CSS 4 + shadcn-svelte
 - Deployed on Vercel
-

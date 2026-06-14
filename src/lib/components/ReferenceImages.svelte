@@ -88,7 +88,7 @@
 								e.stopPropagation();
 								remove(i);
 							}}
-							class="absolute right-1 top-1 flex size-5 items-center justify-center bg-black/70 text-white opacity-0 transition-opacity group-hover:opacity-100"
+							class="absolute top-1 right-1 flex size-5 items-center justify-center bg-black/70 text-white opacity-0 transition-opacity group-hover:opacity-100"
 							aria-label="Remove"
 						>
 							<XIcon class="size-3" />
