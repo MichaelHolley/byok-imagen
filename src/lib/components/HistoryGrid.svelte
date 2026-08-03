@@ -1,16 +1,10 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { history, type GenerationResult } from '$lib/history.svelte.js';
+	import { downloadImage } from '$lib/download.js';
+	import { history } from '$lib/history.svelte.js';
 	import DownloadIcon from '@lucide/svelte/icons/download';
 	import TrashIcon from '@lucide/svelte/icons/trash-2';
-
-	function download(item: GenerationResult) {
-		const a = document.createElement('a');
-		a.href = item.imageUrl;
-		a.download = `imagen-${item.timestamp}.png`;
-		a.click();
-	}
 </script>
 
 {#if history.items.length > 0}
@@ -49,7 +43,7 @@
 							</div>
 							<div class="flex gap-1">
 								<button
-									onclick={() => download(item)}
+									onclick={() => downloadImage(item.imageUrl, `imagen-${item.timestamp}.png`)}
 									class="flex size-6 items-center justify-center text-white/80 hover:text-white"
 									aria-label="Download"
 								>
