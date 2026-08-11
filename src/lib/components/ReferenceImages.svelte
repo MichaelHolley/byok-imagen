@@ -22,16 +22,14 @@
 		});
 	}
 
+	function isAccepted(f: File): boolean {
+		return ACCEPTED.includes(f.type) && f.size <= MAX_BYTES;
+	}
+
 	async function addFiles(files: FileList | File[]) {
-		const accepted: File[] = [];
-		for (const f of Array.from(files)) {
-			if (!ACCEPTED.includes(f.type)) continue;
-			if (f.size > MAX_BYTES) continue;
-			accepted.push(f);
-		}
-		const slots = MAX_FILES - images.length;
-		const next = await Promise.all(accepted.slice(0, slots).map(readAsDataUrl));
-		images = [...new Set([...images, ...next])];
+		const accepted = Array.from(files).filter(isAccepted);
+		const next = await Promise.all(accepted.map(readAsDataUrl));
+		images = [...new Set([...images, ...next])].slice(0, MAX_FILES);
 	}
 
 	function isTextEntry(el: Element | null): boolean {
@@ -46,7 +44,7 @@
 		const data = e.clipboardData;
 		if (!data || images.length >= MAX_FILES) return;
 
-		const files = Array.from(data.files).filter((f) => f.type.startsWith('image/'));
+		const files = Array.from(data.files).filter(isAccepted);
 		if (files.length === 0) return;
 
 		if (isTextEntry(document.activeElement) && data.getData('text/plain')) return;
