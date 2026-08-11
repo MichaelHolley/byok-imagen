@@ -31,7 +31,28 @@
 		}
 		const slots = MAX_FILES - images.length;
 		const next = await Promise.all(accepted.slice(0, slots).map(readAsDataUrl));
-		images = [...images, ...next];
+		images = [...new Set([...images, ...next])];
+	}
+
+	function isTextEntry(el: Element | null): boolean {
+		return (
+			el instanceof HTMLTextAreaElement ||
+			el instanceof HTMLInputElement ||
+			(el instanceof HTMLElement && el.isContentEditable)
+		);
+	}
+
+	function onPaste(e: ClipboardEvent) {
+		const data = e.clipboardData;
+		if (!data || images.length >= MAX_FILES) return;
+
+		const files = Array.from(data.files).filter((f) => f.type.startsWith('image/'));
+		if (files.length === 0) return;
+
+		if (isTextEntry(document.activeElement) && data.getData('text/plain')) return;
+
+		e.preventDefault();
+		addFiles(files);
 	}
 
 	function onPick(e: Event) {
@@ -50,6 +71,8 @@
 		images = images.filter((_, idx) => idx !== i);
 	}
 </script>
+
+<svelte:window onpaste={onPaste} />
 
 <div class="space-y-2">
 	<div class="flex items-center justify-between">
@@ -75,7 +98,7 @@
 		{#if images.length === 0}
 			<div class="flex items-center justify-center gap-2 py-4 text-muted-foreground">
 				<ImagePlusIcon class="size-4" />
-				<span class="font-mono text-xs">drop images or click to upload</span>
+				<span class="font-mono text-xs">drop, paste, or click to upload</span>
 			</div>
 		{:else}
 			<div class="grid grid-cols-4 gap-2">
