@@ -26,26 +26,16 @@
 		return ACCEPTED.includes(f.type) && f.size <= MAX_BYTES;
 	}
 
-	let capHit = $state(false);
-	let capTimer: ReturnType<typeof setTimeout>;
-
-	function flashCapHint() {
-		capHit = true;
-		clearTimeout(capTimer);
-		capTimer = setTimeout(() => (capHit = false), 2000);
-	}
-
 	/** Serialized so overlapping calls can't both read a stale `images` before their await. */
 	let pending: Promise<void> = Promise.resolve();
 
 	function addFiles(files: FileList | File[]) {
 		pending = pending
 			.then(async () => {
-				const slots = MAX_FILES - images.length;
-				const accepted = Array.from(files).filter(isAccepted);
-				if (accepted.length > slots) flashCapHint();
-
-				const next = await Promise.all(accepted.slice(0, slots).map(readAsDataUrl));
+				const accepted = Array.from(files)
+					.filter(isAccepted)
+					.slice(0, MAX_FILES - images.length);
+				const next = await Promise.all(accepted.map(readAsDataUrl));
 				images = [...new Set([...images, ...next])].slice(0, MAX_FILES);
 			})
 			.catch(() => {});
@@ -53,7 +43,7 @@
 
 	function onPaste(e: ClipboardEvent) {
 		const data = e.clipboardData;
-		if (!data) return;
+		if (!data || images.length >= MAX_FILES) return;
 
 		const files = Array.from(data.files).filter(isAccepted);
 		if (files.length === 0) return;
@@ -142,17 +132,8 @@
 		{/if}
 	</div>
 
-	<p
-		class="font-mono text-xs transition-colors {capHit
-			? 'text-destructive'
-			: 'text-muted-foreground'}"
-		aria-live="polite"
-	>
-		{#if capHit}
-			max {MAX_FILES} images — remove one to add another
-		{:else}
-			png · jpeg · webp · gif · max {MAX_FILES} · 8MB each
-		{/if}
+	<p class="font-mono text-xs text-muted-foreground">
+		png · jpeg · webp · gif · max {MAX_FILES} · 8MB each
 	</p>
 
 	<input
