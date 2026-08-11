@@ -22,16 +22,34 @@
 		});
 	}
 
-	async function addFiles(files: FileList | File[]) {
-		const accepted: File[] = [];
-		for (const f of Array.from(files)) {
-			if (!ACCEPTED.includes(f.type)) continue;
-			if (f.size > MAX_BYTES) continue;
-			accepted.push(f);
-		}
-		const slots = MAX_FILES - images.length;
-		const next = await Promise.all(accepted.slice(0, slots).map(readAsDataUrl));
-		images = [...images, ...next];
+	function isAccepted(f: File): boolean {
+		return ACCEPTED.includes(f.type) && f.size <= MAX_BYTES;
+	}
+
+	/** Serialized so overlapping calls can't both read a stale `images` before their await. */
+	let pending: Promise<void> = Promise.resolve();
+
+	function addFiles(files: FileList | File[]) {
+		pending = pending
+			.then(async () => {
+				const accepted = Array.from(files)
+					.filter(isAccepted)
+					.slice(0, MAX_FILES - images.length);
+				const next = await Promise.all(accepted.map(readAsDataUrl));
+				images = [...new Set([...images, ...next])].slice(0, MAX_FILES);
+			})
+			.catch(() => {});
+	}
+
+	function onPaste(e: ClipboardEvent) {
+		const data = e.clipboardData;
+		if (!data || images.length >= MAX_FILES) return;
+
+		const files = Array.from(data.files).filter(isAccepted);
+		if (files.length === 0) return;
+
+		e.preventDefault();
+		addFiles(files);
 	}
 
 	function onPick(e: Event) {
@@ -50,6 +68,8 @@
 		images = images.filter((_, idx) => idx !== i);
 	}
 </script>
+
+<svelte:window onpaste={onPaste} />
 
 <div class="space-y-2">
 	<div class="flex items-center justify-between">
@@ -75,7 +95,7 @@
 		{#if images.length === 0}
 			<div class="flex items-center justify-center gap-2 py-4 text-muted-foreground">
 				<ImagePlusIcon class="size-4" />
-				<span class="font-mono text-xs">drop images or click to upload</span>
+				<span class="font-mono text-xs">drop, paste, or click to upload</span>
 			</div>
 		{:else}
 			<div class="grid grid-cols-4 gap-2">
