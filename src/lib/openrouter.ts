@@ -10,6 +10,7 @@ export type GenerateParams = {
 };
 
 export type GeneratedImage = {
+	image: Blob;
 	imageUrl: string;
 	cost: number | null;
 };
@@ -52,9 +53,13 @@ export async function generateImage({
 
 	const image = data.data?.[0];
 	if (!image?.b64_json) throw new Error('No image returned');
+	const imageBlob = await fetch(
+		`data:${image.media_type ?? 'image/png'};base64,${image.b64_json}`
+	).then((response) => response.blob());
 
 	return {
-		imageUrl: `data:${image.media_type ?? 'image/png'};base64,${image.b64_json}`,
+		image: imageBlob,
+		imageUrl: URL.createObjectURL(imageBlob),
 		cost: data.usage?.cost ?? null
 	};
 }

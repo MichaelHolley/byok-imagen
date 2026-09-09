@@ -51,7 +51,7 @@ function createJob(modelId: string, params: RunParams): Job {
  */
 async function runJob(job: Job, params: RunParams, signal: AbortSignal) {
 	try {
-		const { imageUrl, cost } = await generateImage({
+		const { image, imageUrl, cost } = await generateImage({
 			apiKey: params.apiKey,
 			model: job.modelId,
 			prompt: params.prompt,
@@ -63,7 +63,7 @@ async function runJob(job: Job, params: RunParams, signal: AbortSignal) {
 		job.cost = cost;
 		job.status = 'success';
 		await history.add({
-			imageUrl,
+			image,
 			prompt: job.prompt,
 			modelId: job.modelId,
 			modelName: job.modelName,
@@ -91,6 +91,9 @@ export const generations = {
 	/** Fans every selected model out in parallel; resolves once all have settled. */
 	async run(params: RunParams) {
 		generations.cancel();
+		for (const job of jobs) {
+			if (job.imageUrl) URL.revokeObjectURL(job.imageUrl);
+		}
 		controller = new AbortController();
 		const { signal } = controller;
 
@@ -110,6 +113,9 @@ export const generations = {
 	},
 	clear() {
 		generations.cancel();
+		for (const job of jobs) {
+			if (job.imageUrl) URL.revokeObjectURL(job.imageUrl);
+		}
 		jobs = [];
 	}
 };
