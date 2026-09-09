@@ -1,5 +1,5 @@
 import { history } from './history.svelte.js';
-import { modelName } from './models.js';
+import { modelName, requestableAspectRatio } from './models.js';
 import { generateImage } from './openrouter.js';
 
 export type JobStatus = 'loading' | 'success' | 'error';
@@ -10,6 +10,7 @@ export type Job = {
 	modelName: string;
 	prompt: string;
 	size: string;
+	sizeHonoured: boolean;
 	status: JobStatus;
 	imageUrl: string | null;
 	cost: number | null;
@@ -34,6 +35,7 @@ function createJob(modelId: string, params: RunParams): Job {
 		modelName: modelName(modelId),
 		prompt: params.prompt,
 		size: params.size,
+		sizeHonoured: requestableAspectRatio(modelId, params.size) !== null,
 		status: 'loading',
 		imageUrl: null,
 		cost: null,
@@ -52,7 +54,7 @@ async function runJob(job: Job, params: RunParams, signal: AbortSignal) {
 			apiKey: params.apiKey,
 			model: job.modelId,
 			prompt: params.prompt,
-			size: params.size,
+			aspectRatio: requestableAspectRatio(job.modelId, params.size),
 			referenceImages: params.referenceImages,
 			signal
 		});

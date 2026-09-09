@@ -1,10 +1,10 @@
-const ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+const ENDPOINT = 'https://openrouter.ai/api/v1/images';
 
 export type GenerateParams = {
 	apiKey: string;
 	model: string;
 	prompt: string;
-	size: string;
+	aspectRatio: string | null;
 	referenceImages?: string[];
 	signal?: AbortSignal;
 };
@@ -14,20 +14,12 @@ export type GeneratedImage = {
 	cost: number | null;
 };
 
-function buildContent(prompt: string, referenceImages: string[]) {
-	if (referenceImages.length === 0) return prompt;
-	return [
-		{ type: 'text', text: prompt },
-		...referenceImages.map((url) => ({ type: 'image_url', image_url: { url } }))
-	];
-}
-
 /** Single image generation against OpenRouter. Throws on any non-success outcome. */
 export async function generateImage({
 	apiKey,
 	model,
 	prompt,
-	size,
+	aspectRatio,
 	referenceImages = [],
 	signal
 }: GenerateParams): Promise<GeneratedImage> {
@@ -42,9 +34,15 @@ export async function generateImage({
 		},
 		body: JSON.stringify({
 			model,
-			messages: [{ role: 'user', content: buildContent(prompt, referenceImages) }],
-			modalities: ['image', 'text'],
-			image_config: { aspect_ratio: size }
+			prompt,
+			n: 1,
+			...(aspectRatio && { aspect_ratio: aspectRatio }),
+			...(referenceImages.length > 0 && {
+				input_references: referenceImages.map((url) => ({
+					type: 'image_url',
+					image_url: { url }
+				}))
+			})
 		})
 	});
 
@@ -52,8 +50,11 @@ export async function generateImage({
 
 	if (!res.ok) throw new Error(data.error?.message ?? `Error ${res.status}`);
 
-	const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-	if (!imageUrl) throw new Error('No image returned');
+	const image = data.data?.[0];
+	if (!image?.b64_json) throw new Error('No image returned');
 
-	return { imageUrl, cost: data.usage?.cost ?? null };
+	return {
+		imageUrl: `data:${image.media_type ?? 'image/png'};base64,${image.b64_json}`,
+		cost: data.usage?.cost ?? null
+	};
 }
