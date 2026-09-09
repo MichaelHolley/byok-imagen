@@ -72,17 +72,44 @@ export const MODELS: Model[] = [
 
 export const SIZES: Size[] = [
 	{ id: '1:1', note: 'Square' },
-	{ id: '9:16', note: 'Portrait' },
-	{ id: '16:9', note: 'Landscape' },
-	{ id: '4:3', note: 'Standard' }
+	{ id: '2:3', note: 'Poster' },
+	{ id: '3:2', note: 'Photo' },
+	{ id: '3:4', note: 'Classic portrait' },
+	{ id: '4:3', note: 'Standard' },
+	{ id: '4:5', note: 'Portrait print' },
+	{ id: '5:4', note: 'Landscape print' },
+	{ id: '9:16', note: 'Story' },
+	{ id: '16:9', note: 'Widescreen' },
+	{ id: '21:9', note: 'Cinematic' },
+	{ id: '1:4', note: 'Vertical panorama' },
+	{ id: '4:1', note: 'Horizontal panorama' },
+	{ id: '1:8', note: 'Ultra-tall' },
+	{ id: '8:1', note: 'Ultra-wide' }
 ];
 
 export function modelName(id: string): string {
 	return MODELS.find((m) => m.id === id)?.name ?? id;
 }
 
-/** The size to request, or null when the model can't honour it and must fall back to its default. */
+function ratioValue(ratio: string): number {
+	const [width, height] = ratio.split(':').map(Number);
+	return width / height;
+}
+
+/** The exact or closest supported size, or null when the model takes no aspect ratio. */
 export function requestableAspectRatio(id: string, size: string): string | null {
 	const model = MODELS.find((m) => m.id === id);
-	return model?.aspectRatios.includes(size) ? size : null;
+	if (!model || model.aspectRatios.length === 0) return null;
+	if (model.aspectRatios.includes(size)) return size;
+
+	const numericRatios = model.aspectRatios.filter((ratio) => ratio !== 'auto');
+	const target = ratioValue(size);
+	return (
+		numericRatios.reduce<string | null>((closest, ratio) => {
+			if (closest === null) return ratio;
+			return Math.abs(ratioValue(ratio) - target) < Math.abs(ratioValue(closest) - target)
+				? ratio
+				: closest;
+		}, null) ?? null
+	);
 }

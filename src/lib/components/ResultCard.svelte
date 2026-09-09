@@ -33,11 +33,11 @@
 	</div>
 
 	{#if job.status === 'loading'}
-		<LoadingSkeleton size={job.size} />
+		<LoadingSkeleton size={job.aspectRatio ?? job.size} />
 	{:else if job.status === 'error'}
 		<div
 			class="flex items-center justify-center border border-destructive/40 bg-destructive/5 p-3"
-			style="aspect-ratio: {job.size.replace(':', '/')};"
+			style="aspect-ratio: {(job.aspectRatio ?? job.size).replace(':', '/')};"
 		>
 			<p class="text-center font-mono text-xs text-destructive">{job.error}</p>
 		</div>
@@ -45,9 +45,9 @@
 		<div class="border border-border">
 			<img src={job.imageUrl} alt={job.prompt} class="w-full" />
 		</div>
-		{#if !job.sizeHonoured}
+		{#if job.aspectRatio !== job.size}
 			<p class="font-mono text-xs text-muted-foreground">
-				{job.size} unsupported &rarr; model default
+				{job.size} unsupported &rarr; {job.aspectRatio ?? 'model default'}
 			</p>
 		{/if}
 	{/if}

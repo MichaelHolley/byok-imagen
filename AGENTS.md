@@ -47,8 +47,8 @@ curl -s https://openrouter.ai/api/v1/images/models | jq '.data[] | select(.id ==
 - Copy `aspectRatios` verbatim from `supported_parameters.aspect_ratio.values`. Use `[]` when
   `supported_parameters` is empty — that model takes no parameters and `aspect_ratio` must be
   omitted from the request.
-- A ratio in `SIZES` that the model doesn't list is sent as no `aspect_ratio` at all, and the
-  result card says so. That is expected, not a bug to fix at the call site.
+- A ratio in `SIZES` that the model doesn't list is mapped to the numerically closest supported
+  aspect ratio. Models with no supported parameters still omit `aspect_ratio` entirely.
 
 `supported_parameters.input_references.max` is the model's reference-image cap. It ranges from 0
 (Muse Image) to 16, and `ReferenceImages.svelte` currently enforces a flat `MAX_FILES = 4` across

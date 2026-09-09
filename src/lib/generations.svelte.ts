@@ -10,7 +10,7 @@ export type Job = {
 	modelName: string;
 	prompt: string;
 	size: string;
-	sizeHonoured: boolean;
+	aspectRatio: string | null;
 	status: JobStatus;
 	imageUrl: string | null;
 	cost: number | null;
@@ -29,13 +29,14 @@ let jobs = $state<Job[]>([]);
 let controller: AbortController | null = null;
 
 function createJob(modelId: string, params: RunParams): Job {
+	const aspectRatio = requestableAspectRatio(modelId, params.size);
 	return {
 		id: crypto.randomUUID(),
 		modelId,
 		modelName: modelName(modelId),
 		prompt: params.prompt,
 		size: params.size,
-		sizeHonoured: requestableAspectRatio(modelId, params.size) !== null,
+		aspectRatio,
 		status: 'loading',
 		imageUrl: null,
 		cost: null,
@@ -54,7 +55,7 @@ async function runJob(job: Job, params: RunParams, signal: AbortSignal) {
 			apiKey: params.apiKey,
 			model: job.modelId,
 			prompt: params.prompt,
-			aspectRatio: requestableAspectRatio(job.modelId, params.size),
+			aspectRatio: job.aspectRatio,
 			referenceImages: params.referenceImages,
 			signal
 		});
@@ -66,7 +67,7 @@ async function runJob(job: Job, params: RunParams, signal: AbortSignal) {
 			prompt: job.prompt,
 			modelId: job.modelId,
 			modelName: job.modelName,
-			size: job.size,
+			size: job.aspectRatio ?? job.size,
 			cost
 		});
 	} catch (e) {
