@@ -45,5 +45,10 @@
 		<div class="border border-border">
 			<img src={job.imageUrl} alt={job.prompt} class="w-full" />
 		</div>
+		{#if !job.sizeHonoured}
+			<p class="font-mono text-xs text-muted-foreground">
+				{job.size} unsupported &rarr; model default
+			</p>
+		{/if}
 	{/if}
 </div>
