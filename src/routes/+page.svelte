@@ -10,18 +10,37 @@
 	import SizeSelect from '$lib/components/SizeSelect.svelte';
 	import { generations } from '$lib/generations.svelte.js';
 	import { history } from '$lib/history.svelte.js';
-	import { MODELS, SIZES } from '$lib/models.js';
+	import { SIZES } from '$lib/models.js';
 	import LoaderIcon from '@lucide/svelte/icons/loader';
+	import { onMount } from 'svelte';
+
+	const MODELS_STORAGE_KEY = 'byok-imagen-selected-models';
+	const DEFAULT_MODELS = ['openai/gpt-image-2.5-flare', 'meta/muse-image'];
 
 	$effect(() => {
 		history.init();
 	});
 
 	let apiKey = $state('');
-	let models = $state<string[]>([MODELS[0].id]);
+	let models = $state<string[]>(DEFAULT_MODELS);
 	let size = $state(SIZES[0].id);
 	let prompt = $state('');
 	let referenceImages = $state<string[]>([]);
+
+	onMount(() => {
+		const stored = localStorage.getItem(MODELS_STORAGE_KEY);
+		if (!stored) return;
+		try {
+			const parsed = JSON.parse(stored);
+			if (Array.isArray(parsed) && parsed.length > 0) models = parsed;
+		} catch {
+			// ignore malformed stored value
+		}
+	});
+
+	$effect(() => {
+		localStorage.setItem(MODELS_STORAGE_KEY, JSON.stringify(models));
+	});
 
 	const running = $derived(generations.running);
 	const canGenerate = $derived(
