@@ -11,7 +11,7 @@
 
 	const MAX_FILES = 4;
 	const MAX_BYTES = 8 * 1024 * 1024;
-	const ACCEPTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+	const ACCEPTED = ['image/png', 'image/jpeg', 'image/webp'];
 
 	function readAsDataUrl(file: File): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -133,13 +133,13 @@
 	</div>
 
 	<p class="font-mono text-xs text-muted-foreground">
-		png · jpeg · webp · gif · max {MAX_FILES} · 8MB each
+		png · jpeg · webp · max {MAX_FILES} · 8MB each
 	</p>
 
 	<input
 		bind:this={fileInput}
 		type="file"
-		accept="image/png,image/jpeg,image/webp,image/gif"
+		accept="image/png,image/jpeg,image/webp"
 		multiple
 		onchange={onPick}
 		class="hidden"
