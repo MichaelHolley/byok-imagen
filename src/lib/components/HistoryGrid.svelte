@@ -109,7 +109,14 @@
 						<div class="flex items-center justify-between gap-4">
 							<dt class="text-muted-foreground">created</dt>
 							<dd class="text-right font-mono">
-								{new Date(preview.timestamp).toLocaleString()}
+								{new Date(preview.timestamp).toLocaleString(undefined, {
+									day: '2-digit',
+									month: '2-digit',
+									year: 'numeric',
+									hour: '2-digit',
+									minute: '2-digit',
+									second: '2-digit'
+								})}
 							</dd>
 						</div>
 						{#if preview.cost !== null}
