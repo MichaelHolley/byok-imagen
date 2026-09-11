@@ -60,14 +60,14 @@ export const MODELS: Model[] = [
 		name: 'GPT Image 2.5 Sunburst',
 		note: 'OpenAI',
 		aspectRatios: ['1:1', '2:3', '3:2', '3:4', '4:3', '9:16', '16:9', '21:9', 'auto'],
-		pricing: '$$$'
+		pricing: '$$'
 	},
 	{
 		id: 'openai/gpt-image-2.5-flare',
 		name: 'GPT Image 2.5 Flare',
 		note: 'OpenAI',
 		aspectRatios: ['1:1', '2:3', '3:2', '3:4', '4:3', '9:16', '16:9', '21:9', 'auto'],
-		pricing: '$'
+		pricing: '$$'
 	},
 	{
 		id: 'microsoft/mai-image-2.6',
