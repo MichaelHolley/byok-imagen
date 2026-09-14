@@ -30,11 +30,10 @@
 	let pending: Promise<void> = Promise.resolve();
 
 	function addFiles(files: FileList | File[]) {
+		const selected = Array.from(files);
 		pending = pending
 			.then(async () => {
-				const accepted = Array.from(files)
-					.filter(isAccepted)
-					.slice(0, MAX_FILES - images.length);
+				const accepted = selected.filter(isAccepted).slice(0, MAX_FILES - images.length);
 				const next = await Promise.all(accepted.map(readAsDataUrl));
 				images = [...new Set([...images, ...next])].slice(0, MAX_FILES);
 			})
