@@ -11,8 +11,15 @@
 	import Meta from '$lib/components/icons/Meta.svelte';
 	import Microsoft from '$lib/components/icons/Microsoft.svelte';
 	import OpenAI from '$lib/components/icons/OpenAI.svelte';
+	import BlackForestLabs from '$lib/components/icons/BlackForestLabs.svelte';
 
-	const COMPANY_ICONS: Record<Company, typeof Google> = { Google, Meta, Microsoft, OpenAI };
+	const COMPANY_ICONS: Record<Company, typeof Google> = {
+		Google,
+		Meta,
+		Microsoft,
+		OpenAI,
+		'Black Forest Labs': BlackForestLabs
+	};
 
 	let { models = $bindable() }: { models: string[] } = $props();
 

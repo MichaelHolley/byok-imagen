@@ -1,6 +1,6 @@
 /** `aspectRatios` mirrors the model's descriptor at /api/v1/images/models. An empty list means
  * the model takes no parameters at all, so `aspect_ratio` must be omitted from the request. */
-export type Company = 'Google' | 'OpenAI' | 'Microsoft' | 'Meta';
+export type Company = 'Google' | 'OpenAI' | 'Microsoft' | 'Meta' | 'Black Forest Labs';
 export type Model = {
 	id: string;
 	name: string;
@@ -68,6 +68,52 @@ export const MODELS: Model[] = [
 		note: 'Microsoft',
 		aspectRatios: ['1:1', '2:3', '3:2', '3:4', '4:3', '9:16', '16:9', 'auto'],
 		pricing: '$'
+	},
+	{
+		id: 'black-forest-labs/flux-3-image',
+		name: 'FLUX 3 Image',
+		note: 'Black Forest Labs',
+		aspectRatios: [
+			'21:9',
+			'2:1',
+			'16:9',
+			'3:2',
+			'7:5',
+			'4:3',
+			'5:4',
+			'1:1',
+			'4:5',
+			'3:4',
+			'5:7',
+			'2:3',
+			'9:16',
+			'1:2',
+			'9:21',
+			'auto'
+		]
+	},
+	{
+		id: 'black-forest-labs/flux-3-image-klein',
+		name: 'FLUX 3 Image Klein',
+		note: 'Black Forest Labs',
+		aspectRatios: [
+			'21:9',
+			'2:1',
+			'16:9',
+			'3:2',
+			'7:5',
+			'4:3',
+			'5:4',
+			'1:1',
+			'4:5',
+			'3:4',
+			'5:7',
+			'2:3',
+			'9:16',
+			'1:2',
+			'9:21',
+			'auto'
+		]
 	},
 	{
 		id: 'meta/muse-image',
