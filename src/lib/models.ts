@@ -6,8 +6,8 @@ export type Model = {
 	name: string;
 	note: Company;
 	aspectRatios: string[];
-	/** Relative API cost per generated image, omitted when unknown. */
-	pricing?: '$' | '$$' | '$$$';
+	/** Rough relative cost per image: $ low, $$ medium, $$$ high. Not a price quote. */
+	pricing: '$' | '$$' | '$$$';
 };
 export type Size = { id: string; note: string };
 
@@ -31,7 +31,8 @@ export const MODELS: Model[] = [
 			'9:16',
 			'16:9',
 			'21:9'
-		]
+		],
+		pricing: '$'
 	},
 	{
 		id: 'google/gemini-3.1-flash-image-preview',
@@ -67,14 +68,14 @@ export const MODELS: Model[] = [
 		name: 'GPT Image 2.5 Sunburst',
 		note: 'OpenAI',
 		aspectRatios: ['1:1', '2:3', '3:2', '3:4', '4:3', '9:16', '16:9', '21:9', 'auto'],
-		pricing: '$$'
+		pricing: '$$$'
 	},
 	{
 		id: 'openai/gpt-image-2.5-flare',
 		name: 'GPT Image 2.5 Flare',
 		note: 'OpenAI',
 		aspectRatios: ['1:1', '2:3', '3:2', '3:4', '4:3', '9:16', '16:9', '21:9', 'auto'],
-		pricing: '$$'
+		pricing: '$$$'
 	},
 	{
 		id: 'microsoft/mai-image-2.6',
@@ -111,7 +112,8 @@ export const MODELS: Model[] = [
 			'1:2',
 			'9:21',
 			'auto'
-		]
+		],
+		pricing: '$'
 	},
 	{
 		id: 'black-forest-labs/flux-3-image-klein',
@@ -134,7 +136,8 @@ export const MODELS: Model[] = [
 			'1:2',
 			'9:21',
 			'auto'
-		]
+		],
+		pricing: '$'
 	},
 	{
 		id: 'meta/muse-image',
