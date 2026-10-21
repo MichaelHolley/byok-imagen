@@ -13,6 +13,27 @@ export type Size = { id: string; note: string };
 
 export const MODELS: Model[] = [
 	{
+		id: 'google/gemini-nano-banana-2.1',
+		name: 'Nano Banana 2.1',
+		note: 'Google',
+		aspectRatios: [
+			'1:1',
+			'1:4',
+			'1:8',
+			'2:3',
+			'3:2',
+			'3:4',
+			'4:1',
+			'4:3',
+			'4:5',
+			'5:4',
+			'8:1',
+			'9:16',
+			'16:9',
+			'21:9'
+		]
+	},
+	{
 		id: 'google/gemini-3.1-flash-image-preview',
 		name: 'Nano Banana 2',
 		note: 'Google',
