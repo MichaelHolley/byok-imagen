@@ -54,4 +54,3 @@
 	<p class="text-xs text-muted-foreground">
 		Estimated cost: $ low · $$ medium · $$$ high. Actual costs vary.
 	</p>
-</div>
