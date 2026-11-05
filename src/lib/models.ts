@@ -64,6 +64,20 @@ export const MODELS: Model[] = [
 		pricing: '$$$'
 	},
 	{
+		id: 'openai/gpt-image-2.6-sunburst',
+		name: 'GPT Image 2.6 Sunburst',
+		note: 'OpenAI',
+		aspectRatios: ['1:1', '3:2', '2:3', '4:3', '3:4', '16:9', '9:16', '21:9', 'auto'],
+		pricing: '$$$'
+	},
+	{
+		id: 'openai/gpt-image-2.6-flare',
+		name: 'GPT Image 2.6 Flare',
+		note: 'OpenAI',
+		aspectRatios: ['1:1', '3:2', '2:3', '4:3', '3:4', '16:9', '9:16', '21:9', 'auto'],
+		pricing: '$$$'
+	},
+	{
 		id: 'openai/gpt-image-2.5-sunburst',
 		name: 'GPT Image 2.5 Sunburst',
 		note: 'OpenAI',
