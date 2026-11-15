@@ -7,6 +7,9 @@
 	import DownloadIcon from '@lucide/svelte/icons/download';
 
 	let { job }: { job: Job } = $props();
+
+	// Auto has no known output shape; reserve a square until the actual image arrives.
+	const placeholderSize = $derived(job.aspectRatio ?? (job.size === 'auto' ? '1:1' : job.size));
 </script>
 
 <div class="space-y-2">
@@ -33,11 +36,11 @@
 	</div>
 
 	{#if job.status === 'loading'}
-		<LoadingSkeleton size={job.aspectRatio ?? job.size} />
+		<LoadingSkeleton size={placeholderSize} />
 	{:else if job.status === 'error'}
 		<div
 			class="flex items-center justify-center border border-destructive/40 bg-destructive/5 p-3"
-			style="aspect-ratio: {(job.aspectRatio ?? job.size).replace(':', '/')};"
+			style="aspect-ratio: {placeholderSize.replace(':', '/')};"
 		>
 			<p class="text-center font-mono text-xs text-destructive">{job.error}</p>
 		</div>
@@ -45,7 +48,7 @@
 		<div class="border border-border">
 			<img src={job.imageUrl} alt={job.prompt} class="w-full" />
 		</div>
-		{#if job.aspectRatio !== job.size}
+		{#if job.size !== 'auto' && job.aspectRatio !== job.size}
 			<p class="font-mono text-xs text-muted-foreground">
 				{job.size} unsupported &rarr; {job.aspectRatio ?? 'model default'}
 			</p>

@@ -2,14 +2,24 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { MODELS, modelName, requestableAspectRatio, SIZES } from './models.ts';
 
-test('offers unique concrete sizes supported by the model catalogue', () => {
+test('offers Auto and unique concrete sizes supported by the model catalogue', () => {
 	const supported = new Set(
 		MODELS.flatMap((model) => model.aspectRatios).filter((ratio) => ratio !== 'auto')
 	);
 	const selectable = SIZES.map((size) => size.id);
 
 	assert.equal(new Set(selectable).size, selectable.length);
-	for (const size of selectable) assert.ok(supported.has(size));
+	assert.ok(selectable.includes('auto'));
+	for (const size of selectable.filter((size) => size !== 'auto')) {
+		assert.ok(supported.has(size));
+	}
+});
+
+test('leaves Auto unset for every model, including those without an auto parameter', () => {
+	for (const model of MODELS) {
+		assert.equal(requestableAspectRatio(model.id, 'auto'), null, model.id);
+	}
+	assert.equal(requestableAspectRatio('unknown/model', 'auto'), null);
 });
 
 for (const variant of ['Sunburst', 'Flare']) {
@@ -33,14 +43,14 @@ for (const variant of ['Sunburst', 'Flare']) {
 	});
 
 	test(`resolves exact and closest aspect ratios for GPT Image 2.6 ${variant}`, () => {
-		for (const ratio of aspectRatios) {
+		for (const ratio of aspectRatios.filter((ratio) => ratio !== 'auto')) {
 			assert.equal(requestableAspectRatio(id, ratio), ratio);
 		}
 		assert.equal(requestableAspectRatio(id, '4:5'), '3:4');
 		assert.equal(requestableAspectRatio(id, '5:4'), '4:3');
 		assert.equal(requestableAspectRatio(id, '8:1'), '21:9');
 		assert.equal(requestableAspectRatio(id, '1:8'), '9:16');
-		for (const { id: size } of SIZES) {
+		for (const { id: size } of SIZES.filter((size) => size.id !== 'auto')) {
 			assert.ok(aspectRatios.includes(requestableAspectRatio(id, size)!));
 		}
 	});

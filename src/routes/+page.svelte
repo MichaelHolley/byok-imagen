@@ -10,7 +10,6 @@
 	import SizeSelect from '$lib/components/SizeSelect.svelte';
 	import { generations } from '$lib/generations.svelte.js';
 	import { history } from '$lib/history.svelte.js';
-	import { SIZES } from '$lib/models.js';
 	import LoaderIcon from '@lucide/svelte/icons/loader';
 	import { onMount } from 'svelte';
 
@@ -23,7 +22,7 @@
 
 	let apiKey = $state('');
 	let models = $state<string[]>(DEFAULT_MODELS);
-	let size = $state(SIZES[0].id);
+	let size = $state('auto');
 	let prompt = $state('');
 	let referenceImages = $state<string[]>([]);
 

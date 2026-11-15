@@ -163,6 +163,7 @@ export const MODELS: Model[] = [
 ];
 
 export const SIZES: Size[] = [
+	{ id: 'auto', note: 'Auto' },
 	{ id: '1:1', note: 'Square' },
 	{ id: '2:3', note: 'Poster' },
 	{ id: '3:2', note: 'Photo' },
@@ -188,8 +189,11 @@ function ratioValue(ratio: string): number {
 	return width / height;
 }
 
-/** The exact or closest supported size, or null when the model takes no aspect ratio. */
+/** The exact or closest supported size, or null for Auto or models without aspect ratios. */
 export function requestableAspectRatio(id: string, size: string): string | null {
+	// Auto leaves the choice to the model, including when editing reference images.
+	if (size === 'auto') return null;
+
 	const model = MODELS.find((m) => m.id === id);
 	if (!model || model.aspectRatios.length === 0) return null;
 	if (model.aspectRatios.includes(size)) return size;

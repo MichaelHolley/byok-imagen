@@ -104,7 +104,9 @@
 					<dl class="flex flex-col gap-3 text-xs">
 						<div class="flex items-center justify-between gap-4">
 							<dt class="text-muted-foreground">size</dt>
-							<dd class="font-mono">{preview.size}</dd>
+							<dd class="font-mono">
+								{preview.size === 'auto' ? 'Auto (model default)' : preview.size}
+							</dd>
 						</div>
 						<div class="flex items-center justify-between gap-4">
 							<dt class="text-muted-foreground">created</dt>
