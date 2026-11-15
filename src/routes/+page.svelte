@@ -22,7 +22,7 @@
 
 	let apiKey = $state('');
 	let models = $state<string[]>(DEFAULT_MODELS);
-	let size = $state('1:1');
+	let size = $state('auto');
 	let prompt = $state('');
 	let referenceImages = $state<string[]>([]);
 

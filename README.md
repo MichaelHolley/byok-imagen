@@ -17,7 +17,7 @@ Enter your OpenRouter API key in the UI on first load. The key is held in sessio
 
 ## Aspect ratio
 
-Square (1:1) is selected by default. Choose **Auto** to leave the aspect ratio unset, including when editing reference images. Auto omits `aspect_ratio` from the OpenRouter request and lets each model decide the output shape; preserving a reference image's original ratio is model-dependent, not guaranteed.
+**Auto** is selected by default and leaves the aspect ratio unset, including when editing reference images. Auto omits `aspect_ratio` from the OpenRouter request and lets each model decide the output shape; preserving a reference image's original ratio is model-dependent, not guaranteed.
 
 Fixed ratios are still available. If a model does not support the selected ratio, the closest supported ratio is used. Models without aspect-ratio support always use their own default.
 
